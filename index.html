@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yazılım Web Sitesi</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .social-icons a {
+        text-decoration: none;
+        color: #333;
+        font-size: 24px;
+        margin: 0 10px;
+    }
+
+        body {              
+            background-color: #282c34; 
+            background-image: url('https://i.imgur.com/hctKFff.jpg'); 
+            background-size: cover;
+            background-position: center;
+            color: white; 
+            font-family: 'Arial', sans-serif; 
+        }
+
+        .navbar {
+            margin-bottom: 20px; 
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+        }
+
+        .navbar a {
+            color: white; 
+            text-decoration: none; 
+            padding: 10px 15px; 
+            transition: background-color 0.3s, transform 0.3s; 
+        }
+
+        .navbar a:hover {
+            background-color: rgba(255, 255, 255, 0.2); 
+            transform: scale(1.05); 
+        }
+
+        h1 {
+            color: #ffffff; 
+            margin-bottom: 30px;
+            text-shadow: 5px 2px 7px rgba(0, 0, 0, 0.7);
+            animation: fadeIn 2s ease-in-out; 
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .language-section {
+            background-color: rgba(0, 0, 0, 0.85); 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin: 20px 0; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+        }
+
+        .language-card {
+            background-color: rgba(255, 255, 255, 0.95); 
+            padding: 15px;
+            border-radius: 10px; 
+            text-align: center; 
+            margin-bottom: 10px; 
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .language-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); 
+        }
+
+        .language-card img {
+            max-width: 80%; 
+            height: auto; 
+            border-radius: 5px; 
+        }
+
+        .mission-container {
+            background-color: rgba(255, 255, 255, 0.9); 
+            color: #282c34; 
+            padding: 20px; 
+            border-radius: 8px; 
+            text-align: center; 
+            max-width: 600px; 
+            margin: 40px auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            animation: slideIn 1.5s ease-out; 
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateY(50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Yazılım Web Sitesi</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Anasayfa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="hakkinda.html">Hakkımda</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="iletisim.html">İletişim</a>
+                    
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="Chatbot.html">Chatbot</a>
+                    
+                </li>
+
+
+                <li class="nav-item">
+                    <a class="nav-link" href="özellikler.html">Özellikler</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container text-center mt-5">
+        <h1>Kullandığım Diller</h1>
+        <div class="language-section">
+            <div class="row">
+                <div class="col-md-4 language-card">
+                    <img src="https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/181_Java_logo_logos-512.png" alt="Java" class="img-fluid mb-2">
+                    <h3>Java</h3>
+                </div>
+                <div class="col-md-4 language-card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968350.png" alt="Python" class="img-fluid mb-2">
+                    <h3>Python</h3>
+                </div>
+                <div class="col-md-4 language-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/HTML5_logo_and_wordmark.svg/512px-HTML5_logo_and_wordmark.svg.png" alt="HTML" class="img-fluid mb-2">
+                    <h3>HTML</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mission-container">
+        <h2>Misyonumuz</h2>
+        <p>Yazılım dünyasını daha erişilebilir hale getirerek, geleceği kodlarla şekillendiriyoruz. Yenilikçi çözümlerle herkesin yaratıcılığını ortaya çıkarmasına destek oluyoruz.</p>
+    </div>
+  
+    <div class="mission-container">
+        <h2>Dijital Dönüşüm Yolculuğumuz</h2>
+        <p>Yazılım dünyasını daha erişilebilir hale getirerek, geleceği kodlarla şekillendiriyoruz. Yenilikçi çözümlerle herkesin yaratıcılığını ortaya çıkarmasına destek oluyoruz.</p>
+        <h3>Yenilik ve Kodun Gücü</h3>
+        <p>Her satır kodla dünyayı daha akıllı, daha hızlı ve daha bağlı hale getiriyoruz.</p>
+    </div>
+   
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="./scripts/script.js"></script>
+<script>
+  window.va = window.va || function () {
+    (window.vaq = window.vaq || []).push(arguments)
+  }
+</script>
+<script src="/vercel/insights/script.js"></script>
+
+    
+    
+</body>
+</html>
+<footer class="bg-dark text-white text-center py-3">
+    <p>&copy; 2024 Yazılım Dünyası. Tüm hakları saklıdır.</p>
+</footer>
