@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern İletişim Formu</title>  
+    <style>
+        /* Genel stil ayarları */
+        body {
+            background-image: url('https://img.tamindir.com/2023/01/476730/yazilim-gelistirici.jpg'); /* Arka plan resmi */
+            background-size: cover; /* Resmi tam olarak kaplamak için */
+            background-position: center; /* Resmi ortalamak için */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Dikey olarak düzenle */
+            height: 100vh;
+        }
+
+        /* Menü stili */
+        .container {
+            background-color: rgba(51, 51, 51, 0.9); /* Koyu arka plan rengi, hafif şeffaf */
+            padding: 10px 20px; /* Dışarıdan içeriye boşluk */
+            border-radius: 5px; /* Köşeleri yuvarlama */
+            position: sticky; /* Sayfa kaydırıldığında yukarıda kalacak */
+            top: 0; /* En üstte konumlandır */
+            z-index: 1000; /* Diğer öğelerin üstünde görünmesi için */
+        }
+        
+        .menu {
+            list-style: none; /* Liste işaretlerini kaldır */
+            padding: 0; /* Varsayılan iç boşluğu kaldır */
+            margin: 0; /* Varsayılan dış boşluğu kaldır */
+            display: flex; /* Menü öğelerini yan yana diz */
+            justify-content: center; /* Ortalamak için */
+        }
+        
+        .menu li {
+            margin: 0 15px; /* Menü öğeleri arasında boşluk */
+        }
+        
+        .menu a {
+            text-decoration: none; /* Alt çizgiyi kaldır */
+            color: white; /* Yazı rengi */
+            font-weight: bold; /* Yazı kalınlığı */
+            transition: color 0.3s; /* Renk geçişi */
+        }
+        
+        .menu a:hover {
+            color: #ff6347; /* Fare ile üzerine gelindiğinde renk değişimi */
+        }
+
+        /* Form konteyner stili */
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.9); /* Beyaz arka plan, hafif şeffaf */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            margin: 20px auto; /* Ortada konumlandır */
+            transition: box-shadow 0.3s ease;
+        }
+
+        /* Başlık stili */
+        .form-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        /* Etiket stili */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        /* Giriş alanı stili */
+        input[type="text"], 
+        input[type="email"], 
+        input[type="tel"], 
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Giriş alanı odaklandığında */
+        input[type="text"]:focus, 
+        input[type="email"]:focus, 
+        input[type="tel"]:focus, 
+        textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        /* Textarea stili */
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Gönder düğmesi stili */
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        /* Gönder düğmesi üzerine gelindiğinde */
+        button[type="submit"]:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        /* Form konteynerine fare ile gelindiğinde */
+        .form-container:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Footer stili */
+        footer {
+            background-color: rgba(51, 51, 51, 0.9); /* Koyu arka plan */
+            color: white; /* Yazı rengi */
+            text-align: center; /* Ortalamak için */
+            padding: 15px; /* İç boşluk */
+            position: absolute; /* Sayfanın en altında kalması için */
+            bottom: 0;
+            width: 100%; /* Tüm genişliği kaplasın */
+        }
+
+        .social-links {
+            list-style: none; /* Liste işaretlerini kaldır */
+            padding: 0; /* Varsayılan iç boşluğu kaldır */
+            margin: 0; /* Varsayılan dış boşluğu kaldır */
+            display: flex; /* Sosyal medya simgelerini yan yana diz */
+            justify-content: center; /* Ortalamak için */
+        }
+
+        .social-links li {
+            margin: 0 10px; /* Sosyal medya simgeleri arasında boşluk */
+        }
+
+        .social-links a {
+            color: white; /* Yazı rengi */
+            font-size: 24px; /* İkon boyutu */
+            transition: color 0.3s; /* Renk geçişi */
+        }
+
+        .social-links a:hover {
+            color: #ff6347; /* Hover efekti */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <ul class="menu">
+            <li><a href="index.html">Ana Sayfa</a></li>
+            <li><a href="özellikler.html">Özellikler</a></li>
+            <li><a href="hakkinda.html">Hakkımda</a></li>
+            <li><a href="iletisim.html">İletişim</a></li>
+            <li><a href="Chatbot.html">Chatbot</a>
+        </ul>
+    </div>
+    
+    <div class="form-container">
+        <h2>İletişim Formu</h2>
+        <form action="https://formspree.io/f/xkgnnoea" method="POST">
+            <label for="name">Adınız:</label>
+            <input type="text" id="name" name="name" placeholder="Adınızı girin" required>
+
+            <label for="email">E-posta Adresiniz:</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required>
+
+            <label for="phone">Telefon Numarası:</label>
+            <input type="tel" id="phone" name="phone" placeholder="Telefon numaranızı girin" required>
+
+            <label for="message">Mesajınız:</label>
+            <textarea id="message" name="message" placeholder="Ne hakkında konuşmak istersiniz?" required></textarea>
+
+            <button type="submit">Gönder</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Yazılım Şirketi. Tüm hakları saklıdır.</p>
+        <ul class="social-links">
+            <li><a href="#" aria-label="Facebook"><img src="https://img.icons8.com/color/48/000000/facebook-new.png" alt="Facebook"></a></li>
+            <li><a href="#" aria-label="Twitter"><img src="https://img.icons8.com/color/48/000000/twitter.png" alt="
