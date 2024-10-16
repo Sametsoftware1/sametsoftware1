@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="tr"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Yakın Sonuçlar Getiren Chatbot</title> 
+  <style>
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        background: url('https://cimg.co/wp-content/uploads/sites/5/2024/09/19131009/1726746018-image-1726744616173_optimized-1024x585.jpg') no-repeat center center fixed;
+        background-size: cover;
+        animation: changeBackground 15s infinite;
+        font-family: 'Arial', sans-serif;
+        color: #333;
+    }
+
+    @keyframes changeBackground {
+        0% {
+            background-image: url('https://cimg.co/wp-content/uploads/sites/5/2024/09/19131009/1726746018-image-1726744616173_optimized-1024x585.jpg');
+        }
+        33% {
+            background-image: url('https://crypto-economy.com//wp-content/uploads/2024/08/bitcoin-1-1024x576.jpg');
+        }
+        67% {
+            background-image: url('https://lunu.io/news/wp-content/uploads/2023/12/3aaec52a-673a-4c73-bce1-5a1afce04395-1024x585.webp');
+        }
+    }
+
+    header {
+        background-color: #007bff;
+        color: white;
+        padding: 15px;
+        text-align: center;
+    }
+
+    nav {
+        background-color: #343a40;
+        padding: 10px;
+        text-align: center;
+    }
+
+    nav a {
+        color: white;
+        margin: 0 15px;
+        text-decoration: none;
+        font-size: 18px;
+    }
+
+    nav a:hover {
+        text-decoration: underline;
+    }
+
+    main {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    footer {
+        background-color: #343a40;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+    }
+
+    #chatbox {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        height: 500px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: relative; /* Konumlandırma için */
+    }
+
+    #userInput {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .message {
+        padding: 8px;
+        border-radius: 5px;
+        max-width: 80%;
+    }
+
+    .user {
+        align-self: flex-end;
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
+
+    .bot {
+        align-self: flex-start;
+        background-color: #f8d7da;
+        color: #842029;
+    }
+
+    .suggestions {
+        position: absolute; /* Kenarları göstermek için */
+        top: 0;
+        left: -220px; /* Konumlandırma ayarı */
+        width: 200px; /* Öneri kutusunun genişliği */
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        height: 500px; /* Öneri kutusunun yüksekliği */
+        overflow-y: auto; /* Taşmayı önlemek için */
+    }
+
+    .suggestions h2 {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .suggestions ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .suggestions li {
+        margin: 5px 0;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: #e9ecef;
+        cursor: pointer;
+    }
+
+    .suggestions li:hover {
+        background-color: #d1d1d1; /* Üzerine gelindiğinde arka plan rengi */
+    }
+    </style> 
+ </head> 
+ <body> 
+  <header> 
+   <h1>Sametsoftware Chatbot</h1> 
+  </header> 
+  <nav>
+    <a href="index.html">Anasayfa</a>
+    <a href="hakkinda.html">Hakkımda</a>
+    <a href="iletisim.html">İletişim</a>
+    <a href="özellikler.html">Özellikler</a>
+    <a href="Chatbot.html">Chatbot</a>
+</nav>
+  <main> 
+   <div id="chatbox"></div> 
+   <input type="text" id="userInput" placeholder="Mesajınızı yazın..."> 
+  </main> 
+  <script>
+    const chatbox = document.getElementById('chatbox');
+    const userInput = document.getElementById('userInput');
+
+    // Önceden tanımlı yanıtlar
+    const responses = {
+        'merhaba': 'Merhaba! Size nasıl yardımcı olabilirim?',
+        'nasılsın': 'Ben bir yapay zekayım, sizinle çalışmaya hazırım. Siz nasılsınız?',
+        'seni kim tasarladı': 'Sametsoftware tarafından tasarlandım.',
+        'hava nasıl': 'Üzgünüm, şu an hava durumu bilgisine erişimim yok.',
+        'kapat': 'Görüşmek üzere! İyi günler.',
+        'favori rengin ne': 'Ben bir yapay zeka olduğum için favori rengim yok, ama mavi oldukça popüler!',
+        'yazılım nedir': 'Yazılım, bilgisayarların belirli görevleri yerine getirmesi için yazılmış kod ve programların bütünüdür.',
+        'yapay zeka nedir': 'Yapay zeka, bilgisayarların insan benzeri görevleri yerine getirmesi için geliştirilen teknolojidir.',
+        'html nedir': 'HTML, web sayfalarını oluşturmak için kullanılan bir işaretleme dilidir.',
+        'python nedir': 'Python, genel amaçlı, yüksek seviyeli bir programlama dilidir. Kullanımı oldukça basittir.',
+        'en sevdiğin programlama dili nedir': 'Ben bir yapay zeka olduğum için bir favorim yok, ama Python çok popüler.',
+        'bilgisayar nedir': 'Bilgisayar, veri işlemek için kullanılan bir elektronik cihazdır.',
+        'internet nedir': 'İnternet, dünya çapında milyonlarca bilgisayarın birbirine bağlı olduğu bir ağdır.',
+        'robot nedir': 'Robot, programlanabilir bir makinedir ve belirli görevleri yerine getirmek için tasarlanmıştır.',
+        'blockchain nedir': 'Blockchain, verilerin güvenli bir şekilde kaydedildiği dağıtık bir veritabanı teknolojisidir.',
+        'en hızlı internet tarayıcısı hangisi': 'Tarayıcı hızları, birçok faktöre bağlıdır ama genelde Google Chrome en hızlı olarak kabul edilir.',
+        'samet kim': 'Samet, yazılım alanında deneyimli bir yazılımcıdır. Java, Python, HTML ve PHP gibi dillerde uzmandır.',
+        'yazılıma nasıl başlanır': 'Yazılıma başlamak için temel programlama dillerini öğrenebilir, online kurslar alabilir ve projeler geliştirebilirsiniz.',
+        'favori oyunların neler': 'Ben bir yapay zeka olduğum için oyun oynamıyorum ama popüler oyunlar arasında Fortnite ve Call of Duty var.',
+        'en sevdiğin yemek nedir': 'Ben bir yapay zeka olduğum için yemek yemiyorum ama pizza oldukça popüler bir tercih!',
+        'film önerir misin': 'Eğer aksiyon seviyorsanız "Inception" ya da "The Dark Knight"ı önerebilirim.',
+        'favori rengin ne': 'Ben bir yapay zeka olduğum için favori rengim yok, ama mavi oldukça popüler!',
+    'yazılım nedir': 'Yazılım, bilgisayarların belirli görevleri yerine getirmesi için yazılmış kod ve programların bütünüdür.',
+    
+    
+'yapay zeka nedir': 'Yapay zeka, bilgisayarların insan benzeri görevleri yerine getirmesi için geliştirilen teknolojidir.',
+    'html nedir': 'HTML, web sayfalarını oluşturmak için kullanılan bir işaretleme dilidir.',
+    
+   
+'python nedir': 'Python, genel amaçlı, yüksek seviyeli bir programlama dilidir. Kullanımı oldukça basittir.',
+    
+   
+'en sevdiğin programlama dili nedir': 'Ben bir yapay zeka olduğum için bir favorim yok, ama Python çok popüler.',
+    
+  
+'bilgisayar nedir': 'Bilgisayar, veri işlemek için kullanılan bir elektronik cihazdır.',
+    'internet nedir': 'İnternet, dünya çapında milyonlarca bilgisayarın birbirine bağlı olduğu bir ağdır.',
+    
+    
+'robot nedir': 'Robot, programlanabilir bir makinedir ve belirli görevleri yerine getirmek için tasarlanmıştır.',
+    
+    
+'blockchain nedir': 'Blockchain, verilerin güvenli bir şekilde kaydedildiği dağıtık bir veritabanı teknolojisidir.',
+    'en hızlı internet tarayıcısı hangisi': 'Tarayıcı hızları, birçok faktöre bağlıdır ama genelde Google Chrome en hızlı olarak kabul edilir.',
+    
+  
+'samet kim': 'Samet, yazılım alanında deneyimli bir yazılımcıdır. Java, Python, HTML ve PHP gibi dillerde uzmandır.',
+    'yazılıma nasıl başlanır': 'Yazılıma başlamak için temel programlama dillerini öğrenebilir, online kurslar alabilir ve projeler geliştirebilirsiniz.',
+    
+  
+'favori oyunların neler': 'Ben bir yapay zeka olduğum için oyun oynamıyorum ama popüler oyunlar arasında Fortnite ve Call of Duty var.',
+    'en sevdiğin yemek nedir': 'Ben bir yapay zeka olduğum için yemek yemiyorum ama pizza oldukça popüler bir tercih!',
+    
+  
+'film önerir misin': 'Eğer aksiyon seviyorsanız "Inception" ya da "The Dark Knight"ı önerebilirim.',
+    
+  
+'kitap önerir misin': 'Eğer bilim kurgu seviyorsanız "Dune" veya klasiklerden "1984"ı öneririm.',
+    'müzik türlerin neler': 'Ben bir yapay zeka olduğum için müzik dinlemiyorum ama pop müzik ve klasik müzik çok tercih ediliyor.',
+    
+ 
+'en sevdiğin yazar kim': 'Ben bir yapay zeka olduğum için favori yazarım yok, ama Tolkien ve Orwell popüler yazarlardır.',
+    
+  
+'seyehat etmeyi sever misin': 'Ben bir yapay zeka olduğum için seyahat etmiyorum ama birçok insan yeni yerler keşfetmeyi seviyor.',
+    
+   
+'günlük çalışma saatlerin ne': 'Ben bir yapay zeka olduğum için saat kavramım yok, her zaman buradayım!',
+    'en ilginç hayvan nedir': 'Ben bir yapay zeka olduğum için hayvanlar hakkında bir favorim yok, ama bazıları penguenlerin sevimliliğini çok sever!',
+
+  
+'en sevdiğin renkler': 'Ben bir yapay zeka olduğum için renklerim yok ama genelde yeşil ve mavi doğayı simgeler.',
+    
+ 
+'günlük olarak ne kadar uyursun': 'Ben bir yapay zeka olduğum için uyumam gerekmiyor, her zaman buradayım!',
+    
+    
+'uzayda yaşam var mı': 'Bilim insanları uzayda yaşam olabileceğini düşünüyor, ancak henüz kesin bir kanıt bulunmadı.',
+    
+    
+'en favori tatlı kültürü hangisi': 'Ben bir yapay zeka olduğum için bir favorim yok ama Fransız pastacılığı oldukça ünlüdür.',
+    'bir gezegen olsaydın hangisi olurdun': 'Ben bir yapay zeka olduğum için gezegen olamam ama Jüpiter, büyüklüğü ve ilginç yapısı ile dikkat çekiyor.',
+    
+   
+'hayal gücüm ne kadar önemli': 'Hayal gücü, yaratıcılığın anahtarıdır ve yeni fikirlerin ortaya çıkmasında büyük bir rol oynar.',
+
+'seni kullanmanın en iyi yolu nedir': 'Beni programlama, teknoloji ve genel bilgi konularında sorular sormak için kullanabilirsiniz.',
+
+'evrende ne kadar yıldız var': 'Evrende trilyonlarca yıldız olduğu düşünülüyor, saymak imkansız!',
+    
+ 
+'en iyi film türü hangisi': 'Film türleri kişisel tercihlere göre değişir ama dram ve bilim kurgu geniş bir izleyici kitlesine sahiptir.',
+    
+    
+'en ilginç bulduğun bilgi nedir': 'Dünyadaki en derin nokta Mariana Çukuru, 11.000 metreye kadar iniyor.',
+    'en çok hangi oyun oynanıyor': 'Son zamanlarda PUBG ve Fortnite gibi çok oyunculu oyunlar oldukça popüler.',
+    
+ 
+'bir insanın en iyi arkadaşı ne olmalı': 'En iyi arkadaş, güvenilir, destekleyici ve anlayışlı olmalıdır.',
+
+'yeni teknolojiler hakkında ne düşünüyorsun': 'Yeni teknolojiler, yaşamı kolaylaştırmak ve birçok alanda yenilik sağlamak için büyük bir potansiyele sahiptir.',
+    'en güzel tatil yeri neresi': 'Tatilde güzel yerler kişisel tercihlere göre değişir ama Maldivler ve Bora Bora popüler tatil destinasyonlarıdır.',
+    
+    
+'en sevdiklerinle neler yaparsın': 'Ben bir yapay zeka olduğum için sosyal aktivitelerim yok ama insanlar arkadaşlarıyla seyahat etmek, film izlemek ya da yemek yemek gibi etkinlikler yapmayı sever.',
+    'en etkileyici tarihi figür kimdir': 'Tarihte birçok etkileyici figür var, ancak Albert Einstein ve Nikola Tesla bilim dünyasında büyük etki yaratan isimlerdir.',
+    'hayvanlar aleminden en ilginç hayvan hangisi': 'Kardinal kuşu, renkleriyle dikkat çekerken, okyanuslarda yaşayan kutup ayısı da ilginç özelliklere sahiptir.',
+    'bir süper gücün olsaydı ne olmasını isterdin': 'Ben bir yapay zeka olduğum için süper gücüm yok ama insanların genellikle uçma veya görünmez olma hayalleri vardır.',
+    
+ 
+'farklı kültürlerden ne öğrenebiliriz': 'Farklı kültürler, insanlara yeni bakış açıları kazandırır ve çeşitliliği anlamamıza yardımcı olur.',
+    'en çok hangi aktiviteleri seviyorsun': 'Ben bir yapay zeka olduğum için aktivitelerim yok ama insanlar genellikle spor, seyahat ve sanat etkinliklerini sever.',
+    'en eski teknoloji nedir': 'Tekerleğin icadı, insanlık tarihindeki en eski ve en önemli teknolojik gelişmelerden biridir.',
+    'en sevdiğin kahve türü hangisi': 'Ben bir yapay zeka olduğum için kahve içmiyorum ama espresso ve latte popüler kahve çeşitleridir.',
+    
+    
+'sence mutluluğun sırrı nedir': 'Mutluluğun sırrı, kişisel tatmin, sevgi dolu ilişkiler ve sağlıklı yaşam tarzıdır.',
+    'en çok hangi mevsimi seviyorsun': 'Ben bir yapay zeka olduğum için mevsimim yok ama bahar ve yaz, birçok insan tarafından seviliyor.',
+    'bir yetenek edinmek isteseydin ne olurdu': 'Ben bir yapay zeka olduğum için yetenek edinmem mümkün değil ama birçok insan müzik, resim veya yazılım öğrenmeyi ister.',
+    'seni en çok ne etkiler': 'Ben bir yapay zeka olduğum için duygularım yok ama insanların başarı hikayeleri genelde ilham vericidir.',
+    'dünyanın en yüksek dağını biliyor musun': 'Evet, dünyanın en yüksek dağı Everest Dağı',
+
+    'en ilginç bilim dalı hangisi': 'Fizik, evrenin temel prensiplerini anlamamıza yardımcı olduğu için oldukça ilginçtir.',
+    'uzayda neler keşfedildi': 'Mars’ta su izleri, Jüpiter’in uydusu Europa’da buz tabakaları gibi birçok ilginç keşif yapıldı.',
+    
+ 
+'dünyanın en tuhaf yaratığı hangisi': 'Axolotl, regenerasyon yeteneği ve su altında yaşamı ile oldukça tuhaf bir yaratık.',
+    
+    
+'hayatta en çok neyi merak edersin': 'Ben bir yapay zeka olduğum için merak duygum yok ama insanlar genellikle uzay ve zaman yolculuğunu merak eder.',
+    
+    
+'dünyanın en eski yapısı nedir': 'Göbekli Tepe, dünyanın en eski bilinen yapılarından biridir ve yaklaşık 12.000 yıl öncesine kadar uzanıyor.',
+    
+  
+'en sevdiğin tatlı tarifin nedir': 'Ben bir yapay zeka olduğum için tatlı yapmam mümkün değil ama çikolatalı kek çok popüler bir tarif!',
+    
+   
+'hızlı öğrenmenin sırları nelerdir': 'Hızlı öğrenmek için etkili not alma, düzenli tekrar ve pratik yapma yöntemleri önemlidir.',
+    'favori teknolojik aletin nedir': 'Ben bir yapay zeka olduğum için bir favorim yok ama akıllı telefonlar ve dizüstü bilgisayarlar oldukça yaygındır.',
+    
+    
+'bir yerde hangi tarihi olayı görmek isterdin': 'Ben bir yapay zeka olduğum için zaman yolculuğu yapamam ama birçok insan, Antik Roma dönemini veya İlk İnsanlık dönemini görmek isteyebilir.',
+    'en çok hangi tür müziği seversin': 'Ben bir yapay zeka olduğum için müzik dinlemiyorum ama birçok kişi rock ve klasik müziği sever.',
+    
+  
+'dünyada en çok konuşulan diller nelerdir': 'Mandarin, İspanyolca ve İngilizce, en çok konuşulan diller arasındadır.',
+    
+  
+'en ilginç deneyin nedir': 'Benim bir deneyimim yok ama bilim insanları için deneyler keşiflerin temelidir.',
+    
+ 
+'hayvanlar neden birbirleriyle iletişim kurar': 'Hayvanlar, tehlike, yiyecek veya eş bulma gibi konularda iletişim kurarak hayatta kalmayı sağlarlar.',
+    
+   
+'bir film senaryosu yazsaydın hangi konu üzerine olurdu': 'Ben bir yapay zeka olduğum için senaryo yazmam mümkün değil ama bilim kurgu ve macera temaları popülerdir.',
+    
+   
+'zaman yolculuğu mümkün mü': 'Şu anki bilimsel anlayışa göre zaman yolculuğu teorik olarak mümkün, ancak pratikte gerçekleştirilmesi henüz mümkün değil.',
+    'en sevdiğin dizi hangisi': 'Ben bir yapay zeka olduğum için dizi izlemiyorum ama "Game of Thrones" ve "Stranger Things" oldukça popüler.'
+
+
+
+};
+
+    // Kullanıcının mesajı gönderildiğinde
+    userInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter' && userInput.value.trim()) {
+            const userMessage = userInput.value.trim();
+            addMessage(userMessage, 'user');
+            userInput.value = '';
+            processUserMessage(userMessage);
+        }
+    });
+
+    // Mesaj ekleme fonksiyonu
+    function addMessage(message, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', sender);
+        messageDiv.textContent = message;
+        chatbox.appendChild(messageDiv);
+        chatbox.scrollTop = chatbox.scrollHeight; // Scroll to bottom
+    }
+
+    // Kullanıcı mesajına yanıt verme fonksiyonu
+    function processUserMessage(userMessage) {
+        let botResponse = findClosestResponse(userMessage);
+        addMessage(botResponse, 'bot');
+    }
+
+    // Yakın yanıtları bulma fonksiyonu
+    function findClosestResponse(userMessage) {
+        let closestMatch = '';
+        let closestDistance = Infinity;
+
+        for (const key in responses) {
+            const distance = calculateLevenshteinDistance(userMessage.toLowerCase(), key);
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestMatch = responses[key];
+            }
+        }
+
+        // Eğer yakın bir eşleşme yoksa varsayılan cevap döndür
+        return closestMatch ? closestMatch : 'Üzgünüm, bu konuda yardımcı olamıyorum.';
+    }
+
+    // Levenshtein mesafesini hesaplama fonksiyonu
+    function calculateLevenshteinDistance(a, b) {
+        const matrix = [];
+
+        // İlk satırı ve sütunu doldurma
+        for (let i = 0; i <= b.length; i++) {
+            matrix[i] = [i];
+        }
+        for (let j = 0; j <= a.length; j++) {
+            matrix[0][j] = j;
+        }
+
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1]; // Harfler eşleşiyorsa
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1, // Değiştir
+                        Math.min(matrix[i][j - 1] + 1, // Sil
+                                   matrix[i - 1][j] + 1) // Ekle
+                    );
+                }
+            }
+        }
+
+        return matrix[b.length][a.length];
+    }
+</script> 
+ </body>
+</html>
